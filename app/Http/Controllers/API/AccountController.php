@@ -25,12 +25,8 @@ class AccountController extends Controller
 
     public function event(Request $request)
     {
-        $myArr = array('type' => 'deposit', 'destination' => "100", 'amount' => 10);
-        $myJSON = json_encode($myArr);
-        Storage::disk('local')->put('temp.json', $myJSON);
-        return Response::json([
-            'destination' => [ "id"=>"100", "balance"=>10 ]
-        ], 201);
+        $response = $this->accountService->handleEvent($request);
+        return Response::json($response['data'], $response['statusCode']);
     }
 
     public function balance(Request $request)

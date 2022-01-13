@@ -11,7 +11,7 @@ use Storage;
 class AccountController extends Controller
 {
     public $accountService;
-    
+
     public function __construct()
     {
         $this->accountService = new AccountService();
@@ -19,7 +19,7 @@ class AccountController extends Controller
 
     public function reset(Request $request)
     {
-        Storage::disk('local')->put('temp.json', "");
+        $this->accountService->reset();
         return response('OK', 200);
     }
 
@@ -35,6 +35,10 @@ class AccountController extends Controller
 
     public function balance(Request $request)
     {
-        return response(200);
+        $balance = $this->accountService->getBalance($request->get('account_id'));
+        if($balance == null) {
+            return response(0, 404);
+        }
+        return response($balance, 200);
     }
 }
